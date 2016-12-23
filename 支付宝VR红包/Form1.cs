@@ -90,12 +90,17 @@ namespace 支付宝VR红包
             }
             Rectangle ret = new Rectangle(0, 0, 420, 420);
             double rad = Convert.ToDouble(numericUpDown1.Text);
-            b.GaussianBlur(ref ret, (float)rad, false);
+            b.GaussianBlur(ref ret, (float)rad, checkBox1.Checked);
             pictureBox1.Image = b;
             g.Dispose();
             if (rad > 255) {
                 numericUpDown1.Value = 255;
             }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            numericUpDown1_ValueChanged(sender, e);
         }
     }
 }

@@ -1,3 +1,8 @@
 E:\git\cs_alipay_VR_redbag\支付宝VR红包\obj\x86\Release\支付宝VR红包.Form1.resources
 E:\git\cs_alipay_VR_redbag\支付宝VR红包\obj\x86\Release\支付宝VR红包.Properties.Resources.resources
 E:\git\cs_alipay_VR_redbag\支付宝VR红包\obj\x86\Release\支付宝VR红包.csproj.GenerateResource.Cache
+E:\git\cs_alipay_VR_redbag\支付宝VR红包\bin\Release\支付宝VR红包.exe
+E:\git\cs_alipay_VR_redbag\支付宝VR红包\bin\Release\支付宝VR红包.pdb
+E:\git\cs_alipay_VR_redbag\支付宝VR红包\obj\x86\Release\支付宝VR红包.csprojResolveAssemblyReference.cache
+E:\git\cs_alipay_VR_redbag\支付宝VR红包\obj\x86\Release\支付宝VR红包.exe
+E:\git\cs_alipay_VR_redbag\支付宝VR红包\obj\x86\Release\支付宝VR红包.pdb
