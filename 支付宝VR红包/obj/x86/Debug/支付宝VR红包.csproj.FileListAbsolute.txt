@@ -1,0 +1,9 @@
+E:\代码\vs\支付宝VR红包\支付宝VR红包\bin\Debug\支付宝VR红包.exe
+E:\代码\vs\支付宝VR红包\支付宝VR红包\bin\Debug\支付宝VR红包.pdb
+E:\代码\vs\支付宝VR红包\支付宝VR红包\obj\x86\Debug\支付宝VR红包.Form1.resources
+E:\代码\vs\支付宝VR红包\支付宝VR红包\obj\x86\Debug\支付宝VR红包.Properties.Resources.resources
+E:\代码\vs\支付宝VR红包\支付宝VR红包\obj\x86\Debug\支付宝VR红包.csproj.GenerateResource.Cache
+E:\代码\vs\支付宝VR红包\支付宝VR红包\obj\x86\Debug\支付宝VR红包.exe
+E:\代码\vs\支付宝VR红包\支付宝VR红包\obj\x86\Debug\支付宝VR红包.pdb
+E:\git\cs_alipay_VR_redbag\支付宝VR红包\obj\x86\Debug\支付宝VR红包.exe
+E:\git\cs_alipay_VR_redbag\支付宝VR红包\obj\x86\Debug\支付宝VR红包.pdb
