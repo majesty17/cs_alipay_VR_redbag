@@ -39,33 +39,37 @@ namespace 支付宝VR红包
             openFileDialog.RestoreDirectory = true;
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                if (Bmp != null)
-                {
-                    Bmp.Dispose();
-                    Marshal.FreeHGlobal(ImageCopyPointer);
-                }
-                try
-                {
-                    Bmp = (Bitmap)Bitmap.FromFile(openFileDialog.FileName);
-                    BitmapData BmpData = new BitmapData();
-                    Bmp.LockBits(new Rectangle(0, 0, Bmp.Width, Bmp.Height), ImageLockMode.ReadWrite, Bmp.PixelFormat, BmpData);    // 用原始格式LockBits,得到图像在内存中真正地址，这个地址在图像的大小，色深等未发生变化时，每次Lock返回的Scan0值都是相同的。
-                    ImagePointer = BmpData.Scan0;                            //  记录图像在内存中的真正地址
-                    DataLength = BmpData.Stride * BmpData.Height;           //  记录整幅图像占用的内存大小
-                    ImageCopyPointer = Marshal.AllocHGlobal(DataLength);    //  直接用内存数据来做备份，AllocHGlobal在内部调用的是LocalAlloc函数
-                    CopyMemory(ImageCopyPointer, ImagePointer, DataLength); //  这里当然也可以用Bitmap的Clone方式来处理，但是我总认为直接处理内存数据比用对象的方式速度快。
-                    Bmp.UnlockBits(BmpData);
-                    //pictureBox1.Image = Bmp;
-                }
-                catch (Exception d)
-                {
-                    MessageBox.Show(d.Message);
-                }
+                openFileToShow(openFileDialog.FileName);
 
                 numericUpDown1_ValueChanged(sender, e);
             }
 
         }
+        private void openFileToShow(string filename) {
+            if (Bmp != null)
+            {
+                Bmp.Dispose();
+                Marshal.FreeHGlobal(ImageCopyPointer);
+            }
+            try
+            {
+                Bmp = (Bitmap)Bitmap.FromFile(filename);
+                BitmapData BmpData = new BitmapData();
+                Bmp.LockBits(new Rectangle(0, 0, Bmp.Width, Bmp.Height), ImageLockMode.ReadWrite, Bmp.PixelFormat, BmpData);    // 用原始格式LockBits,得到图像在内存中真正地址，这个地址在图像的大小，色深等未发生变化时，每次Lock返回的Scan0值都是相同的。
+                ImagePointer = BmpData.Scan0;                            //  记录图像在内存中的真正地址
+                DataLength = BmpData.Stride * BmpData.Height;           //  记录整幅图像占用的内存大小
+                ImageCopyPointer = Marshal.AllocHGlobal(DataLength);    //  直接用内存数据来做备份，AllocHGlobal在内部调用的是LocalAlloc函数
+                CopyMemory(ImageCopyPointer, ImagePointer, DataLength); //  这里当然也可以用Bitmap的Clone方式来处理，但是我总认为直接处理内存数据比用对象的方式速度快。
+                Bmp.UnlockBits(BmpData);
+                //pictureBox1.Image = Bmp;
+            }
+            catch (Exception d)
+            {
+                MessageBox.Show(d.Message);
+            }
+        }
 
+        //调整高斯模糊半径
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             if (Bmp == null)
@@ -97,10 +101,34 @@ namespace 支付宝VR红包
                 numericUpDown1.Value = 255;
             }
         }
-
+        //开关边界
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             numericUpDown1_ValueChanged(sender, e);
+        }
+
+
+
+        //
+        private void Form1_DragDrop(object sender, DragEventArgs e)
+        {
+            string filename = ((System.Array)e.Data.GetData(DataFormats.FileDrop)).GetValue(0).ToString();
+            if (filename.EndsWith(".jpg") || filename.EndsWith(".png"))
+            {
+                openFileToShow(filename);
+                numericUpDown1_ValueChanged(sender, e);
+            }
+            else {
+                MessageBox.Show("只允许使用图片文件！");
+            }
+           
+        }
+
+        private void Form1_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.Link;
+            else e.Effect = DragDropEffects.None;
         }
     }
 }
