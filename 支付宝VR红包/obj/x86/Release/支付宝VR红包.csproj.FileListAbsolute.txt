@@ -6,3 +6,10 @@ E:\git\cs_alipay_VR_redbag\支付宝VR红包\bin\Release\支付宝VR红包.pdb
 E:\git\cs_alipay_VR_redbag\支付宝VR红包\obj\x86\Release\支付宝VR红包.csprojResolveAssemblyReference.cache
 E:\git\cs_alipay_VR_redbag\支付宝VR红包\obj\x86\Release\支付宝VR红包.exe
 E:\git\cs_alipay_VR_redbag\支付宝VR红包\obj\x86\Release\支付宝VR红包.pdb
+E:\git\cs_alipay_VR_redbag\支付宝VR红包\bin\Release\支付宝VR红包.exe.config
+E:\git\cs_alipay_VR_redbag\支付宝VR红包\bin\Release\Emgu.CV.dll
+E:\git\cs_alipay_VR_redbag\支付宝VR红包\bin\Release\Emgu.CV.UI.dll
+E:\git\cs_alipay_VR_redbag\支付宝VR红包\bin\Release\Emgu.Util.dll
+E:\git\cs_alipay_VR_redbag\支付宝VR红包\bin\Release\Emgu.CV.xml
+E:\git\cs_alipay_VR_redbag\支付宝VR红包\bin\Release\Emgu.CV.UI.xml
+E:\git\cs_alipay_VR_redbag\支付宝VR红包\bin\Release\Emgu.Util.xml

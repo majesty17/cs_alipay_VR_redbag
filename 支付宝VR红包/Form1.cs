@@ -12,6 +12,12 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Drawing.Drawing2D;
 
+using Emgu.CV;
+using Emgu.Util;
+using Emgu.CV.Structure;
+using Emgu.CV.Util;
+using Emgu.CV.CvEnum;
+using Emgu.CV.UI;
 
 namespace 支付宝VR红包
 {
@@ -25,6 +31,8 @@ namespace 支付宝VR红包
         private int DataLength;
 
 
+        //
+        Image<Bgr, Byte> inner = null;
 
         public Form1()
         {
@@ -109,26 +117,100 @@ namespace 支付宝VR红包
 
 
 
-        //
+        //松开拖动
         private void Form1_DragDrop(object sender, DragEventArgs e)
         {
             string filename = ((System.Array)e.Data.GetData(DataFormats.FileDrop)).GetValue(0).ToString();
             if (filename.EndsWith(".jpg") || filename.EndsWith(".png"))
             {
-                openFileToShow(filename);
-                numericUpDown1_ValueChanged(sender, e);
+                //openFileToShow(filename);
+                //numericUpDown1_ValueChanged(sender, e);
+                inPainting(filename);
             }
             else {
                 MessageBox.Show("只允许使用图片文件！");
-            }
-           
+            }  
         }
 
+
+
+
+        //拖拽进入
         private void Form1_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
                 e.Effect = DragDropEffects.Link;
             else e.Effect = DragDropEffects.None;
         }
+        //打开图片
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            OpenFileDialog Openfile = new OpenFileDialog();
+            Openfile.Filter = "All valid files (*.bmp/*.jpg/*.png)|*.bmp;*.jpg;*.png";
+            if (Openfile.ShowDialog() == DialogResult.OK)
+            {
+                inPainting(Openfile.FileName);   
+            } 
+        }
+        //取出inner图片
+        private void inPainting(string filename) {
+
+            //1，裁剪
+            Image<Bgr, Byte> ori_pic = new Image<Bgr, byte>(filename);
+            ori_pic.ROI = new Rectangle(Util.INNER_PIC_POS_X, Util.INNER_PIC_POS_Y, Util.INNER_PIC_WIDTH, Util.INNER_PIC_HEIGHT);
+            inner = ori_pic.Copy();
+
+            inPainting();
+
+            
+        }
+
+       //处理图片，show
+        private void inPainting() {
+            if (inner == null)
+                return;
+
+            //灰度化inner
+            Image<Gray, Byte> inner_gray = inner.Convert<Gray, Byte>();
+
+            //二值化
+            int thre = Convert.ToInt32(numericUpDown_binthre.Value);
+            int blocksize = Convert.ToInt32(numericUpDown_blocksize.Value);
+            thre = thre % 256;
+            //Image<Bgr, Byte> mask = inner_gray.ThresholdBinary(new Bgr(thre, thre, thre), new Bgr(255, 255, 255));
+            Image<Gray, Byte> mask = inner_gray.ThresholdAdaptive(new Gray(255), ADAPTIVE_THRESHOLD_TYPE.CV_ADAPTIVE_THRESH_GAUSSIAN_C, THRESH.CV_THRESH_BINARY_INV, blocksize, new Gray(thre));
+            //.ThresholdAdaptive(new Bgr(255, 255, 255), ADAPTIVE_THRESHOLD_TYPE.CV_ADAPTIVE_THRESH_GAUSSIAN_C, THRESH.CV_THRESH_BINARY_INV, 11, new Bgr(thre, thre, thre));
+            
+
+            //3，inpaint
+            double rad = Convert.ToDouble(numericUpDown_inpaintrad.Value);
+            //Image<Bgr, Byte> output = inner.InPaint(mask, rad);
+
+            pictureBox1.Image = mask.ToBitmap();
+        }
+
+
+
+        //二值化阈值
+        private void numericUpDown_binthre_ValueChanged_1(object sender, EventArgs e)
+        {
+            inPainting();
+        }
+        // inpaint半径
+        private void numericUpDown_inpaintrad_ValueChanged_1(object sender, EventArgs e)
+        {
+            inPainting();
+        }
+        //块大小
+        private void numericUpDown_blocksize_ValueChanged(object sender, EventArgs e)
+        {
+            inPainting();
+        }
+
+
+
+
+        
+
     }
 }
