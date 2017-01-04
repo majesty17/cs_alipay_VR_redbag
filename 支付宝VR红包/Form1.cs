@@ -170,6 +170,7 @@ namespace 支付宝VR红包
             if (inner == null)
                 return;
 
+            /*
             //灰度化inner
             Image<Gray, Byte> inner_gray = inner.Convert<Gray, Byte>();
 
@@ -179,14 +180,17 @@ namespace 支付宝VR红包
             thre = thre % 256;
             //Image<Bgr, Byte> mask = inner_gray.ThresholdBinary(new Bgr(thre, thre, thre), new Bgr(255, 255, 255));
             Image<Gray, Byte> mask = inner_gray.ThresholdAdaptive(new Gray(255), ADAPTIVE_THRESHOLD_TYPE.CV_ADAPTIVE_THRESH_GAUSSIAN_C, THRESH.CV_THRESH_BINARY_INV, blocksize, new Gray(thre));
-            //.ThresholdAdaptive(new Bgr(255, 255, 255), ADAPTIVE_THRESHOLD_TYPE.CV_ADAPTIVE_THRESH_GAUSSIAN_C, THRESH.CV_THRESH_BINARY_INV, 11, new Bgr(thre, thre, thre));
             
+            
+            //需要加一个mask预处理机制
+            */
 
+            Image<Gray, Byte> mask = makeMask(inner.Size).Convert<Gray,Byte>();
             //3，inpaint
             double rad = Convert.ToDouble(numericUpDown_inpaintrad.Value);
-            //Image<Bgr, Byte> output = inner.InPaint(mask, rad);
+            Image<Bgr, Byte> output = inner.InPaint(mask, rad);
 
-            pictureBox1.Image = mask.ToBitmap();
+            pictureBox1.Image = output.ToBitmap();
         }
 
 
@@ -205,6 +209,78 @@ namespace 支付宝VR红包
         private void numericUpDown_blocksize_ValueChanged(object sender, EventArgs e)
         {
             inPainting();
+        }
+        private void numericUpDown_mask_x_ValueChanged(object sender, EventArgs e)
+        {
+            inPainting();
+        }
+
+        private void numericUpDown_mask_y_ValueChanged(object sender, EventArgs e)
+        {
+            inPainting();
+        }
+
+        //生成mask并显示
+        private void button_makemask_Click(object sender, EventArgs e)
+        {
+
+            Image<Bgr, Byte> mask_pic = new Image<Bgr, byte>(420, 420);
+
+            for (int i = -10; i < 10; i++) {
+                for(int j=-10;j<10;j++){
+                    drawPatern(mask_pic, new Point(i*83+j*12, i*26+j*95));
+                }
+                
+            }
+
+            pictureBox1.Image = mask_pic.ToBitmap();
+        }
+
+        //返回一个合适的mask
+        private Image<Bgr, Byte> makeMask(Size size) {
+            Image<Bgr, Byte> mask = new Image<Bgr, byte>(size);
+            int mask_x = Convert.ToInt32(numericUpDown_mask_x.Value);
+            int mask_y = Convert.ToInt32(numericUpDown_mask_y.Value);
+            for (int i = -10; i < 10; i++)
+            {
+                for (int j = -10; j < 10; j++)
+                {
+                    drawPatern(mask, new Point(mask_x + i * 83 + j * 12, mask_y + i * 26 + j * 95));
+                }
+
+            }
+            return mask;
+        }
+        private void drawPatern(Image<Bgr, Byte> mask_pic, Point poi)
+        {
+            int c_x = poi.X;
+            int c_y = poi.Y;
+
+            
+            Bgr pen = new Bgr(Color.White);
+            //1，大点和小点
+
+            mask_pic.Draw(new CircleF(new PointF(c_x, c_y), 14), pen, 0);
+            mask_pic.Draw(new CircleF(new PointF(c_x - 33, c_y - 42), 10), pen, 0);   //左上
+            mask_pic.Draw(new CircleF(new PointF(c_x + 21, c_y - 55), 10), pen, 0);   //右上
+            mask_pic.Draw(new CircleF(new PointF(c_x - 51, c_y + 12), 10), pen, 0);   //左
+            mask_pic.Draw(new CircleF(new PointF(c_x + 50, c_y - 15), 10), pen, 0);   //右
+            mask_pic.Draw(new CircleF(new PointF(c_x - 22, c_y + 53), 10), pen, 0);   //左下
+            mask_pic.Draw(new CircleF(new PointF(c_x + 32, c_y + 39), 10), pen, 0);   //右下
+            //2，辐射线
+
+            
+            mask_pic.Draw(new LineSegment2DF(new PointF(c_x - 33, c_y - 42), new PointF(c_x, c_y)), pen, 4);
+            mask_pic.Draw(new LineSegment2DF(new PointF(c_x + 21, c_y - 55), new PointF(c_x, c_y)), pen, 4);
+            mask_pic.Draw(new LineSegment2DF(new PointF(c_x - 51, c_y + 12), new PointF(c_x, c_y)), pen, 4);
+            mask_pic.Draw(new LineSegment2DF(new PointF(c_x + 51, c_y - 14), new PointF(c_x, c_y)), pen, 4);
+            mask_pic.Draw(new LineSegment2DF(new PointF(c_x - 22, c_y + 53), new PointF(c_x, c_y)), pen, 4);
+            mask_pic.Draw(new LineSegment2DF(new PointF(c_x + 32, c_y + 39), new PointF(c_x, c_y)), pen, 4);
+            //3，连接线
+            mask_pic.Draw(new LineSegment2DF(new PointF(c_x - 33, c_y - 42), new PointF(c_x - 51, c_y + 12)), pen, 4);
+            mask_pic.Draw(new LineSegment2DF(new PointF(c_x + 21, c_y - 55), new PointF(c_x + 51, c_y - 14)), pen, 4);
+            mask_pic.Draw(new LineSegment2DF(new PointF(c_x - 22, c_y + 53), new PointF(c_x + 32, c_y + 39)), pen, 4);
+             
         }
 
 

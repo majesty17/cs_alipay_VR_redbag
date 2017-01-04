@@ -1,4 +1,19 @@
-﻿## update 0.3
+﻿## update 0.4
+
+mask如果从原图中提取，很不精确，仔细看了下网格，还是有规律的；
+
+研究一下网格的规律，搞一套固定模式的mask。
+
+1. 圆点分大和小两种
+2. 考虑以大圆点为中心的六边形，所有这种六边形是一致的（目测）。
+3. 生成六边形，然后平铺
+
+效果
+![examples](manual_mask.png "examples")
+
+后续:提高mask的准确度;inpaint算法的参数优化
+
+## update 0.3
 
 处理过程，首先裁剪出小图；
 
@@ -32,6 +47,8 @@ opencv+emgu环境搞了半天，最终使用libemgucv-windows-universal-cuda-2.4
 
 先不搞这个了，了解一下opencv里的inpaint先。。。
 
+-----
+old
 -----
 
 ## 功能
